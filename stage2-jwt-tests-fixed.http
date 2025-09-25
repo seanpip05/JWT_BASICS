@@ -45,8 +45,7 @@ Content-Type: {{contentType}}
 
 ### 2.1 Test Admin Access - PASTE ADMIN TOKEN BELOW - Authorization: Bearer PASTE_ADMIN_TOKEN_HERE
 GET {{baseUrl}}/api/protected-message-admin
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1ODIxNTgzMCwiZXhwIjoxNzU4MjE2MTMwLCJyb2xlcyI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl0sImlzc3VlZEJ5IjoibGVhcm5pbmcgSldUIHdpdGggU3ByaW5nIFNlY3VyaXR5In0.hc0PO2yhVkQuseDJ7a5cNWZtEmmq2GHnH8LQm8vIdko
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1ODc4MzM0MCwiZXhwIjoxNzU4NzgzNjQwLCJyb2xlcyI6WyJST0xFX0FETUlOIiwiUk9MRV9VU0VSIl0sImlzc3VlZEJ5IjoibGVhcm5pbmcgSldUIHdpdGggU3ByaW5nIFNlY3VyaXR5In0.hXnJVr3SyehahjACG8taaNW1yN8B5_1t0szw-PddOpA
 Content-Type: {{contentType}}
 
 ###
@@ -61,6 +60,21 @@ Content-Type: {{contentType}}
 ### 2.3 Test Access Without Token (Should fail with 401)
 GET {{baseUrl}}/api/protected-message
 Content-Type: {{contentType}}
+
+### ===================================
+### STEP 2.5: TEST REFRESH TOKEN ENDPOINT
+### ===================================
+
+### 2.5 Test Refresh Token - PASTE REFRESH TOKEN BELOW
+POST {{baseUrl}}/api/refresh_token
+Content-Type: {{contentType}}
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1ODc4MzM0MCwiZXhwIjoxNzU5Mzg4MTQwLCJ0eXBlIjoicmVmcmVzaCJ9.Y-2P-FGsh_hHdWAHCoh_BelAiMnrm0MrnmJ_PpGeKFY"
+}
+
+###
+
 
 ### ===================================
 ### STEP 3: TOKEN VALIDATION TESTS

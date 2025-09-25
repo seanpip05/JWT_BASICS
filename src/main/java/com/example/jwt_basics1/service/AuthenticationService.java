@@ -28,10 +28,10 @@ public class AuthenticationService {
         }
 
         // generate the JWT token
-        String jwtToken = jwtUtil.generateToken(authenticationRequest, userDetails);
+        String jwtToken = jwtUtil.generateToken(userDetails);
+        String refreshToken = jwtUtil.generateRefreshToken(userDetails);
 
         // return the AuthenticationResponse object
-        return new AuthenticationResponse(jwtToken);
+        return new AuthenticationResponse(jwtToken, refreshToken);
     }
 }
-

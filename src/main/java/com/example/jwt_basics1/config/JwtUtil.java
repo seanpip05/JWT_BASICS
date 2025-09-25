@@ -40,8 +40,7 @@ public class JwtUtil {
     }
 
     // Generate a JWT token for a user, first time login
-    public String generateToken(AuthenticationRequest authenticationRequest,
-                                UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails) {
 
         Map<String, Object> claims = new HashMap<>();
 
@@ -97,9 +96,42 @@ public class JwtUtil {
                 .build().parseSignedClaims(token).getPayload();
     }
 
+    // Generate a refresh token for a user
+    public String generateRefreshToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        return Jwts.builder()
+                .claims()
+                .add(claims)
+                .subject(userDetails.getUsername())
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + JwtProperties.REFRESH_EXPIRATION_TIME))
+                .and()
+                .claim("type", "refresh")
+                .signWith(getKey())
+                .compact();
+    }
+
+    // Validate a refresh token
+    public boolean validateRefreshToken(String token, UserDetails userDetails) {
+        try {
+            String username = extractUsername(token);
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token) && isRefreshToken(token));
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid refresh token: " + e.getMessage());
+        }
+    }
+
+    // Check if the token is a refresh token
+    public boolean isRefreshToken(String token) {
+        Claims claims = extractAllClaims(token);
+        Object type = claims.get("type");
+        return type != null && type.equals("refresh");
+    }
+
     // Check if a JWT token is expired
-    private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date(System.currentTimeMillis()));
+    public boolean isTokenExpired(String token) {
+        final Date expiration = extractClaim(token, Claims::getExpiration);
+        return expiration.before(new Date());
     }
 
     // Extract the expiration date from a JWT token

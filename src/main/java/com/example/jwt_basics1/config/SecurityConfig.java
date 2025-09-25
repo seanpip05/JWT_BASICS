@@ -58,11 +58,11 @@ public class SecurityConfig {
 
                 // Configuring authorization for HTTP requests
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("api/login/**").permitAll()
-
-                        .requestMatchers("api/protected-message-admin").hasAnyRole("ADMIN")
-                        .requestMatchers("api/protected-message").hasAnyRole("USER", "ADMIN")
-
+                        .requestMatchers("/api/login/**").permitAll()
+                        .requestMatchers("/api/refresh_token").permitAll()
+                        .requestMatchers("/api/refresh_token/**").permitAll()
+                        .requestMatchers("/api/protected-message-admin").hasAnyRole("ADMIN")
+                        .requestMatchers("/api/protected-message").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated());
 
         return http.build();
