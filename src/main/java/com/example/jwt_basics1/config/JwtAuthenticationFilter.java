@@ -1,6 +1,7 @@
 package com.example.jwt_basics1.config;
 
 import com.example.jwt_basics1.service.CustomUserDetailsService;
+import com.example.jwt_basics1.service.TokenBlacklistService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,18 +19,17 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
     final private JwtUtil jwtUtil;
     final private CustomUserDetailsService customUserDetailsService;
+    final private TokenBlacklistService tokenBlacklistService;
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
         return path.startsWith("/api/login") ||
                 path.startsWith("/api/public") ||
                 path.startsWith("/api/refresh_token");
     }
-
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request,
@@ -57,6 +57,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Missing authentication token");
+            return;
+        }
+
+        // Blacklist check
+        if (tokenBlacklistService.isTokenBlacklisted(token)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Token is blacklisted");
             return;
         }
 
