@@ -70,7 +70,7 @@ POST {{baseUrl}}/api/refresh_token
 Content-Type: {{contentType}}
 
 {
-  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1ODc4MzM0MCwiZXhwIjoxNzU5Mzg4MTQwLCJ0eXBlIjoicmVmcmVzaCJ9.Y-2P-FGsh_hHdWAHCoh_BelAiMnrm0MrnmJ_PpGeKFY"
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTc1ODc4NjIxMywiZXhwIjoxNzU5MzkxMDEzLCJ0eXBlIjoicmVmcmVzaCJ9.6PjIRfEn3ytOfzfPT7e1EgXMI_THlvTu8SPjlR0wBuk"
 }
 
 ###
