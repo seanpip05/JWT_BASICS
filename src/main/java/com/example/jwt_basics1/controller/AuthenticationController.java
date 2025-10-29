@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -25,9 +27,9 @@ public class AuthenticationController {
     // The authenticateUser() method takes in an AuthenticationRequest object, which contains the username and password.
     // The method returns an AuthenticationResponse object, which contains the JWT and refresh token, and the user's roles.
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody AuthenticationRequest authenticationRequest) {
+    public ResponseEntity<?> authenticateUser(@RequestBody AuthenticationRequest authenticationRequest, HttpServletRequest request) {
         try {
-            AuthenticationResponse authResponse = authenticationService.authenticate(authenticationRequest);
+            AuthenticationResponse authResponse = authenticationService.authenticate(authenticationRequest, request);
             return ResponseEntity.ok(authResponse);
         } catch (AuthenticationServiceException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -35,9 +37,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/refresh_token")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest, HttpServletRequest request) {
         try {
-            AuthenticationResponse response = refreshTokenService.refreshToken(refreshTokenRequest);
+            AuthenticationResponse response = refreshTokenService.refreshToken(refreshTokenRequest, request);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());

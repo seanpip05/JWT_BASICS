@@ -3,6 +3,8 @@ package com.example.jwt_basics1.service;
 import com.example.jwt_basics1.config.JwtUtil;
 import com.example.jwt_basics1.dto.AuthenticationRequest;
 import com.example.jwt_basics1.dto.AuthenticationResponse;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,9 +18,9 @@ public class AuthenticationService {
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
+    private final RefreshTokenService refreshTokenService;
 
-
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
+    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest, HttpServletRequest httpRequest) {
         // load the user details from the database using the username by calling the loadUserByUsername() method
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
@@ -30,6 +32,10 @@ public class AuthenticationService {
         // generate the JWT token
         String jwtToken = jwtUtil.generateToken(userDetails);
         String refreshToken = jwtUtil.generateRefreshToken(userDetails);
+
+        // Store IP for refresh token
+        String clientIp = httpRequest.getRemoteAddr();
+        refreshTokenService.storeRefreshTokenIp(refreshToken, clientIp);
 
         // return the AuthenticationResponse object
         return new AuthenticationResponse(jwtToken, refreshToken);
